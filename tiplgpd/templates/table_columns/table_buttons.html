@@ -1,0 +1,19 @@
+
+<div class="text-sm-end">
+    <a style="cursor: pointer;"
+       hx-get="{{ record.get_absolute_url }}"
+       hx-target="#modal_base"
+       class="action-icon" title="Visualizar"><i class="bi bi-eye-fill"></i></a>
+
+    <a style="cursor: pointer;"
+       hx-get="{{ record.get_update_url }}"
+       hx-target="#modal_base"
+       class="action-icon" title="Editar"><i class="bi bi-pencil-square"></i></a>
+
+    <a style="cursor: pointer;"
+       hx-get="{{ record.get_delete_url }}"
+       hx-target="#modal_base"
+       class="action-icon" title="Excluir"><i class="bi bi-trash3"></i></a>
+</div>
+
+<div id="modal_base"></div>

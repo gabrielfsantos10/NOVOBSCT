@@ -1,0 +1,31 @@
+<div class="container-fluid">
+
+<div id="header-topbar" class="row header-topbar shadow mb-4">
+        <div class="col text-sm-begin">
+            <div id="sidebarCollapse" class="header-logo"></div>
+            <div class="header-logo"></div>
+        </div>
+        <div class="col text-sm-end" style="color: var(--second-color)">
+            <h1>
+                <a href="#" id="door" class="bi-door-closed-fill" onmouseover="openDoor()" onmouseleave="closeDoor()"></a>
+
+                Portal da Privacidade
+                {% if user.is_authenticated %}
+                    <h5>Bem-vindo, {{user.first_name}}!</h5>
+                {% endif %}
+            </h1>
+        </div>
+    </div>
+</div>
+
+<script>
+    var a = document.getElementById("door");
+    function openDoor() {
+        a.classList.remove("bi-door-closed-fill")
+        a.classList.add("bi-door-open-fill")
+    }
+    function closeDoor() {
+        a.classList.remove("bi-door-open-fill")
+        a.classList.add("bi-door-closed-fill")
+    }
+</script>

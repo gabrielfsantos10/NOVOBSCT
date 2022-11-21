@@ -1,0 +1,144 @@
+<!-- === COMENTÁRIOS === -->
+<!--Se houver filtros renderiza o cabeçalho com o botão incluir/buscar, se não mostra apenas o incluir.-->
+<!--Abaixa renderiza a tabela.-->
+
+{% extends 'bsct/base.html' %}
+
+{% load crispy_forms_tags %}
+{% load render_table from django_tables2 %}
+
+{% load static %}
+{% load bscttags %}
+
+{% block TIPLGPD_TITLE %}
+    {{ view.model|get_model_name }}
+{% endblock %}
+
+{% block TIPLGPD_EXTRA_STYLE %}
+{% endblock %}
+
+
+{% block TIPLGPD_MAIN_CONTENT %}
+
+    <br>
+    <h2>
+        {% if titulo %}
+            {{ titulo }}
+        {% else %}
+            {{ view.model|get_model_name }}
+        {% endif %}
+    </h2>
+
+    <div class="row">
+        <div class='col-md-12'>
+            <div class="card card-body shadow mb-4">
+                <div class="tab-content" id="tab-content">
+
+                    {% if filter %}
+                        <form id="form-filter" class="form form-inline">
+                            <div class="row justify-content-end">
+                                {% for c in filter.form %}
+                                    <div class="col">
+                                        <label style="font-size: smaller">{{ c.label }}</label>
+                                    </div>
+                                {% endfor %}
+
+                                    <div class="col-3 text-sm-end">
+
+                                    <div class="row">
+                                        <div class="col text-sm-end"></div>
+                                        <div class="col text-sm-end"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row justify-content-end">
+                                {% for c in filter.form %}
+                                    <div class="col">
+                                        {{ c }}
+                                    </div>
+                                {% endfor %}
+
+                                    <div class="col-3 text-sm-end">
+
+                                    <div class="row">
+                                        <div class="col">
+                                            <button type="submit" class="btn btn-primary form-control text-white">
+                                                <i class="bi bi-search"></i> Buscar</button>
+                                        </div>
+                                        <div class="col">
+                                            <!--Botão "Incluir" que aciona o HTMX-->
+                                            <button hx-get="{{ object_list.model.get_create_url }}"
+                                               hx-trigger="click"
+                                               hx-target="#modal_base"
+                                               class="btn btn-success form-control text-white">
+                                                <i class="bi bi-plus-lg"></i> Incluir</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+
+                        {# TODO Reavaliar necessidade de tratamento aqui ou no backend #}
+                        <script>
+                            let form_elements = document.getElementById("form-filter").elements;
+
+                            for (let i = 0, element; element = form_elements[i++];) {
+                                if (element.type !== "submit")
+                                    element.classList.add("form-control");
+                            }
+                        </script>
+                    {% else %}
+
+                        <div class="row justify-content-end">
+                            <div class="col">
+                                <h4>{{ view.model|get_model_name }}</h4>
+                            </div>
+
+                        </div>
+                    {% endif %}
+
+                    {% if extra_action %}
+                        <form action="{% url extra_action %}" method="post">
+                            {% csrf_token %}
+                            {% render_table table %}
+                            <div class="panel card-body card col text-sm-end">
+                                {% if extra_action %}
+                                    <input class="btn btn-success" type="submit" value="{{ extra_button }}"/>
+                                {% endif %}
+                            </div>
+                        </form>
+                    {% else %}
+                        <!--Renderiza a tabela-->
+                        {% render_table table %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+
+<!--    <div class="col-1 text-sm-end">-->
+<!--        <button hx-get="{{ object_list.model.get_create_url }}"-->
+<!--           hx-trigger="click"-->
+<!--           hx-target="#teste_modal"-->
+<!--           class="btn btn-success mb-2 form-control text-white"-->
+<!--           _="on htmx:afterOnLoad wait 10ms then add .uk-open to #modal">-->
+<!--            <i class="bi bi-plus-lg"></i> Incluir</button>-->
+<!--    </div>-->
+
+<!--    MODAL-->
+    <div id="modal_base"></div>
+
+    {% block TIPLGPD_EXTRA_JS %}
+        <script>
+            function toggle(source) {
+                checkboxes = document.getElementsByName('selection');
+                for(var i in checkboxes)
+                    checkboxes[i].checked = source.checked;
+            }
+        </script>
+
+    {% endblock %}
+
+{% endblock %}

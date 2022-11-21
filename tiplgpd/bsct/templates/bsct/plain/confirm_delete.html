@@ -1,0 +1,62 @@
+{% load bscttags %}
+{% load static %}
+
+<!doctype html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+</head>
+<body>
+
+    <div id="modal-backdrop" class="modal-backdrop fade show" style="display:block;"></div>
+        <div id="modal" class="modal fade show" tabindex="-1" style="display:block;">
+            <div class="modal-dialog modal-dialog-centered">
+                <!--Modal abrindo ao carregar página-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Deseja realmente excluir "{{ object }}"?</h3>
+                    </div>
+                    <div class="modal-body">
+                        <form id="form_excluir" hx-post="{{ request.path }}" hx-headers='{"X-CSRFToken":"{{ csrf_token }}"}' class="modal-content">
+                            <table class='table table-condensed'>
+                                {% with object|get_detail as d %}
+                                    {% for field,value in d.items %}
+                                        <tr>
+                                            <td>
+                                                <b> {{ field }} </b>
+                                            </td>
+                                            <td>
+                                                {{ value }}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                {% endwith %}
+                            </table>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="row" >
+                            <div class="col-6" >
+                                <button type="button" class="btn btn-danger text-white textinput textInput form-control" onclick="closeModal()">Cancelar</button>
+                            </div>
+                            <div class="col-6" >
+                                <button form="form_excluir" type="submit"
+                                        hx-trigger="click"
+                                        hx-target="#modal_confirmacao"
+                                        class="btn btn-success mb-2 form-control text-white">Enviar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+    <!--Javascript que fecha modal-->
+    <script src="{% static 'js/close_modal.js' %}"></script>
+
+</html>

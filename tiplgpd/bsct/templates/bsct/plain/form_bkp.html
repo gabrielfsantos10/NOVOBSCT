@@ -1,0 +1,76 @@
+<!-- === COMENTÁRIOS === -->
+<!--Usa o get_verbose_name para o nome "normal" do título, por exemplo.-->
+<!--Consegue renderizar os formuçários usando o padrão do crispy_forms, caso tenha.-->
+
+{% extends 'bsct/base.html' %}
+
+{% load crispy_forms_tags %}
+{% crispy example_form example_form.helper %}
+
+{% load static %}
+{% load bscttags %}
+
+{% load widget_tweaks %}
+
+{% block TIPLGPD_TITLE %}
+    {% get_verbose_name form.instance %}
+{% endblock %}
+
+
+{% block TIPLGPD_MAIN_CONTENT %}
+
+<!--    <br>-->
+<!--    <h2>-->
+<!--        {% if titulo %}-->
+<!--            {{ titulo }}-->
+<!--        {% else %}-->
+<!--            {% get_verbose_name form.instance %}-->
+<!--        {% endif %}-->
+<!--    </h2>-->
+
+<!--<form hx-post="{{ request.path }}" hx-headers='{"X-CSRFToken":"{{ csrf_token }}"}' action='' method='post' class='modal-content' enctype='multipart/form-data'>-->
+    <form action='' method='post' class='form-inline' enctype='multipart/form-data'>
+        {% csrf_token %}
+        <div id="modal" class="uk-modal" style="display:block;">
+            <div id="modal-backdrop" class="modal-backdrop fade show" style="display:block;"></div>
+                <div id="modal" class="modal fade show" tabindex="-1" style="display:block;">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <!--Modal abrindo ao carregar página-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Área</h5>
+                            </div>
+                            <div class="modal-body">
+                                {% crispy form %}
+                                {% if form.formset %}
+            {#                            {% crispy form.formset %}#}
+                                    {% for formline in form.formset %}
+                                        {% crispy formline %}
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                            <div class="modal-footer">
+    <!--                                <button type="button" class="btn btn-secondary" onclick="closeModal()">Close</button>-->
+                                <a href='{{ form.instance.get_list_url }}' class="btn btn-danger text-white textinput textInput form-control">Cancelar</a>
+                                <input type="submit" class="btn btn-success text-white textinput textInput form-control" value="Enviar">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+<br>
+
+
+<!--    {# Script para ajustar algumas classes no formulário do cripy forms #}-->
+<!--    {# TODO Verificar a necessidade dessa inicializacao #}-->
+<!--    <script>-->
+<!--        function load() {-->
+<!--            document.getElementById('tab-content').getElementsByClassName('nav nav-tabs')[0].className = "nav nav-tabs nav-pills nav-justified";-->
+<!--        }-->
+<!--        window.onload = load;-->
+<!--    </script>-->
+
+{% endblock %}

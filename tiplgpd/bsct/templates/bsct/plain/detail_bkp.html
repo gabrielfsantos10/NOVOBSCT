@@ -1,0 +1,74 @@
+<!-- === COMENTÁRIOS === -->
+<!--Filtro safe, permite tags html no conteúdo da variável.-->
+<!--Possuí uma validação com os values abaixo.-->
+
+
+{% extends 'bsct/base.html' %}
+
+{% load bscttags %}
+
+{% block TIPLGPD_TITLE %}
+    {{ view.model|get_model_name }}
+{% endblock %}
+
+{% block TIPLGPD_MAIN_CONTENT %}
+
+    <br>
+
+    <h3 class=''>{{ object | safe }}</h3>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card card-body">
+
+                <table class='table table-condensed'>
+                    {% with object|get_detail as d %}
+
+                        {% for field,value in d.items %}
+                            <tr>
+                                <td>
+                                    <b> {{ field }} </b>
+                                </td>
+                                <td>
+                                    {% if value != None %}
+                                        {% if value == 'False' %}
+                                            Sim
+                                        {% elif value == 'True' %}
+                                            Não
+                                        {% elif value.year %}
+                                            {{ value|date:'SHORT_DATETIME_FORMAT'}}
+                                        {% elif '[{"x":' in value %}
+{#                                            {{ value|safe }}#}
+                                            <strong>Assinado!</strong>
+                                        {% else %}
+                                            {{ value|safe }}
+                                        {%  endif %}
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+
+                    {% endwith %}
+                </table>
+
+                <div class="row">
+                    <div class="col-12">
+                        {% if redirect_concluido %}
+                            <a class='btn btn-success text-white form-control' href="{{ redirect_concluido }}">
+                                Concluir
+                            </a>
+                        {% else %}
+                            {% if object.get_list_url %}
+                                <a class='btn btn-success text-white form-control' href="{{ object.get_list_url }}">
+                                    Concluir2
+                                </a>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

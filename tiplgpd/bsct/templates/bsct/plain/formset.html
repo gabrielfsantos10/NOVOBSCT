@@ -1,0 +1,25 @@
+{{ form.media }}
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table">
+                <thead class=" text-primary">
+                    <tr>
+                        {% for l in f.forms.0.visible_fields %}
+                            <th>{{ l.label }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for l in f.forms %}
+                        <tr>
+                            {%for b in l %} {{ b.media }}
+                                <td>{{b}}</td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

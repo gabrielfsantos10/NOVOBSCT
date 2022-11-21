@@ -1,0 +1,83 @@
+{% load bscttags %}
+
+<!doctype html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+
+</head>
+<body>
+
+    <!--MODAL DE CONCLUSÃO, TESTANDO COM OS CÓDIGOS HTML, POIS ELE RENDERIZAVA COM OS TRECHOS DO BASE.HTML-->
+        <div id="modal_confirmacao">
+            <div data-backdrop="static" id="modal-backdrop" class="modal-backdrop fade show" style="display:block;"></div>
+                <div id="modal" class="modal fade show" tabindex="-1" style="display:block;">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <!--Modal abrindo ao carregar página-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Área</h5>
+                            </div>
+                            <div class="modal-body">
+                                <form id="teste_form" hx-post="{{ request.path }}" hx-target="#lista" hx-headers='{"X-CSRFToken":"{{ csrf_token }}"}' class="modal-content">
+                                    <table class='table table-condensed'>
+                                        {% with object|get_detail as d %}
+
+                                            {% for field,value in d.items %}
+                                                <tr>
+                                                    <td>
+                                                        <b> {{ field }} </b>
+                                                    </td>
+                                                    <td>
+                                                        {% if value != None %}
+                                                            {% if value == 'False' %}
+                                                                Sim
+                                                            {% elif value == 'True' %}
+                                                                Não
+                                                            {% elif value.year %}
+                                                                {{ value|date:'SHORT_DATETIME_FORMAT'}}
+                                                            {% elif '[{"x":' in value %}
+                    {#                                            {{ value|safe }}#}
+                                                                <strong>Assinado!</strong>
+                                                            {% else %}
+                                                                {{ value|safe }}
+                                                            {%  endif %}
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        {% endwith %}
+                                    </table>
+                                </form>
+
+                            </div>
+                            <div class="modal-footer">
+                                <div class="col-12" hx-get="{{ object.get_list_url }}">
+                                    {% if redirect_concluido %}
+                                        <a class='btn btn-success text-white form-control' href="{{ redirect_concluido }}">
+                                            Concluir
+                                        </a>
+                                    {% else %}
+                                    {% if object.get_list_url %}
+                                        <!--Ao clicar no concluir ele não fecha o modal, mas atualiza corretamente e salva-->
+                                        <button form="teste_form" type="button" class='btn btn-success text-white form-control'>
+                                            Concluir
+                                        </button>
+                                    {% endif %}
+                                {% endif %}
+                                </div>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <!--hx-target ou no <form> ou no <button> submit-->
+    <div id="lista"></div>
+
+</body>
+</html>
